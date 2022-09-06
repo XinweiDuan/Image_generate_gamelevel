@@ -41,7 +41,7 @@ def parse_args():
         dest='image_path',
         help='The image to predict, which can be a path of image, or a file list containing image paths, or a directory including images',
         type=str,
-        default='./2.jpg')
+        default=img_path)
     parser.add_argument(
         '--save_dir',
         dest='save_dir',
@@ -141,8 +141,9 @@ def get_test_config(cfg, args):
 
 
 def main(args):
+    print("start predict3")
     env_info = get_sys_env()
-
+    print("start predict4")
     if args.device == 'gpu' and env_info[
             'Paddle compiled with cuda'] and env_info['GPUs used']:
         place = 'gpu'
@@ -152,13 +153,14 @@ def main(args):
         place = 'npu'
     else:
         place = 'cpu'
-
+    print("start predict5")
     paddle.set_device(place)
+    print("start predict6")
     if not args.cfg:
         raise RuntimeError('No configuration file specified.')
 
     cfg = Config(args.cfg)
-
+    print("start predict7")
     msg = '\n---------------Config Information---------------\n'
     msg += str(cfg)
     msg += '------------------------------------------------'
@@ -170,7 +172,6 @@ def main(args):
     logger.info('Number of predict images = {}'.format(len(image_list)))
 
     test_config = get_test_config(cfg, args)
-
     predict(
         model,
         model_path=args.model_path,
@@ -181,8 +182,19 @@ def main(args):
         **test_config)
 
 
+
 if __name__ == '__main__':
+    #设置需要检测照片的路径
+    img_dir = "E:\\Pycharm\\Py_workspace\\Faste_rcnn3\\PaddleSeg\\"
+    img_name = "2"
+    img_format = ".jpg"
+    img_path = img_dir + img_name + img_format
+    print("start predict")
     args = parse_args()
+    print("start predict2")
     main(args)
-    detectColor()
-    detect_anmial()
+
+    detectColor(img_name)
+
+    detect_anmial(img_path)
+    print("完成动物检测")
